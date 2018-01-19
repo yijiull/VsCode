@@ -79,17 +79,9 @@ void getfac(LL n, LL c){
     return;
 }
 
-void init(){
-    freopen("in.txt", "w", stdout);
-    int t =110;
-    cout<<t<<endl;
-    for(int i= 0; i < t; i++){
-        cout<<rand() % 1313131<<endl;
-    }
-}
 int main(){
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
+//    freopen("in.txt", "r", stdin);
+//    freopen("out.txt", "w", stdout);
     int t;
     scanf("%d", &t);
     while(t--){
