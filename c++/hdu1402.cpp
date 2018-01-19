@@ -64,6 +64,7 @@ void in(){
         cout<<rand() % 131313 <<endl;
     }
 }
+
 int main(){
    // freopen("in.txt", "r", stdin);
    // freopen("out.txt", "w", stdout);
