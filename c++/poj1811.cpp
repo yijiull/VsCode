@@ -78,7 +78,6 @@ void getfac(LL n, LL c){
     getfac(n / p, c);
     return;
 }
-
 int main(){
 //    freopen("in.txt", "r", stdin);
 //    freopen("out.txt", "w", stdout);
