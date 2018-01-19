@@ -1,0 +1,7 @@
+{
+    "version": "0.1.0",
+    "command": "g++",
+    "isShellCommand": true,    // 是否为Shell命令
+    "args": ["-std=c++11","-g","${file}","-o","${fileDirname}/${fileBasenameNoExtension}.out"],
+    "showOutput": "always"
+}
