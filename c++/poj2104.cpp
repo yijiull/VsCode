@@ -41,7 +41,6 @@ int query(int u, int v, int l, int r, int k){
     else return query(R[u], R[v], rson, k - num);
 }
 
-
 int main(){
     int n, m;
     while(scanf("%d %d", &n, &m) != EOF){
