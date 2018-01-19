@@ -54,11 +54,9 @@ bool BellmandFord(int s, int t, int &flow, int &cost){
             }
         }
     }
-    //cout<<"d[t] = "<<d[t]<<"  a[t] = "<<a[t]<<endl;
     if(d[t] == inf) return false;
     flow += a[t];
     cost += d[t] * a[t];
-    //cout<<flow <<"  "<<cost<<"  --"<<endl;
     int u = t;
     while(u != s){
         e[p[u]].flow += a[t];
