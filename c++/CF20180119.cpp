@@ -1,42 +1,37 @@
 #include <bits/stdc++.h>
-#include <vector>
 using namespace std;
-const int maxn = 100010;
-#define LL long long 
-
-int bit[110];
-
-int pri[maxn];
-int cnt;
-void init(){
-    memset(pri, 0, sizeof(pri));
-    for(LL i = 2; i < maxn; i++){
-        if(!pri[i]) {
-            pri[cnt++] = i;
-            for(LL j = i * i; j < maxn; j += i) pri[j] = 1;
-        }
-    }
-}
+#define LL long long
+map<int, int> cnt;
 
 int main(){
-    int n, m;
-    while(cin>>n>>m){
-        cnt = 0;
-        init();
-        //for(int i = 0; i < 20; i++ )cout<<pri[i]<<endl;
-        int i = 0;
-        while(pri[i] < n-1) i++;
-        int temp = pri[i];
-        cout<<temp<<" "<<temp<<endl;
-        for(int i = 1; i < n - 1; i++) cout<<i<<" "<<i+1<<" "<<1<<endl, temp--;
-        cout<<n-1<<" "<<n<<" "<<temp<<endl;
-        int c =0;
-        m -= n-1;
-        for(int i = 1; i <= n && c < m; i++){
-            for(int j = i + 1; j <= n && c < m; j++) if(i+1 != j && i != j) {
-                cout<<i<<" "<<j<<" "<<1000000000<<endl;
-                c++;
+    LL n, k;
+    ios::sync_with_stdio(0);
+    while(cin>>n>>k){
+        int m = 0;
+        cnt.clear();
+        for(int i = 0; i <= 63; i++) if((n >> i) & 1) {cnt[i]++; m++;}
+        if(m > k) cout<<"No\n";
+        else{
+            for(int i = 63; i >= -63; i--){
+                if(cnt[i] + m <= k){
+                    m += cnt[i];
+                    cnt[i-1] += cnt[i] * 2;
+                    cnt[i] = 0;
+                }else {
+                    break;
+                }
             }
+            cout<<"Yes"<<endl;
+            multiset<int> ms;
+            for(int i = 63; i >= -63; i--) for(int j = 0; j < cnt[i]; j++) ms.insert(i);
+            while(ms.size() < k){
+                int u = *ms.begin();
+                ms.erase(ms.begin());
+                ms.insert(u-1);
+                ms.insert(u-1);
+            }
+            for(auto it = ms.rbegin(); it != ms.rend(); it++) cout<<*it<<" ";
+            cout<<endl;
         }
     }
 }
