@@ -1,78 +1,60 @@
-
-#include <algorithm>
-#include <cctype>
-#include <cmath>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <queue>
-#include <string>
-#include <set>
-#include <vector>
-
+//树状数组 dp
+//求LIS的数量
+#include <bits/stdc++.h>
 using namespace std;
-#define pr(x) cout << #x << " = " << x << "  "
-#define prln(x) cout << #x << " = " << x << endl
-const int N = 1e5 + 10, INF = 0x3f3f3f3f, MOD = 1e9 + 7;
 
-int n, a[N];
-
-using P = pair<int, int>;
-
-P f[N]; //LIS length, count
-
-void getMax(P& x, P y) {
-    if(x.first < y.first) x = y;
-    else if(x.first == y.first) {
-        if((x.second += y.second) >= MOD)
-            x.second -= MOD;
+const int mod = 1e9 + 7;
+const int maxn = 50010;
+struct Node{
+    int len, cnt;
+    Node(int len = 0, int cnt = 0) : len(len), cnt(cnt){}
+    Node operator + (const Node &t) const{
+        if(len < t.len) return t;
+        if(len > t.len) return (*this);
+        return Node(len, (cnt + t.cnt) % mod);
     }
+};
+struct Info{
+    int x, pos;
+    bool operator < (const Info &temp) const{
+        if(x == temp.x) return pos > temp.pos;
+        return x < temp.x;
+    }
+};
+
+bool cmp(Info &a, Info &b){
+    if(a.x == b.x) return a.pos > b.pos;
+    return a.x < b.x;
+}
+Node c[maxn];
+Info a[maxn];
+
+int n;
+void add(int i, Node v){
+    for(; i <= n; i += i & -i) c[i] = c[i] + v;
 }
 
-int id[N];
-bool cmp(int x, int y) {
-    if(a[x] != a[y]) return a[x] < a[y];
-    return x > y;
+Node sum(int i){
+    Node res;
+    for(; i; i -= i & -i) res = res + c[i];
+    return res;
 }
 
-void cdq(int l, int r) {
-    if(l == r) return;
-
-    int m = l + r >> 1;
-    cdq(l, m);
-
-    for(int i = l; i <= r; ++i) id[i] = i;
-    sort(id + l, id + r + 1, cmp);
-
-    P maxf(0, 0);
-    for(int i = l; i <= r; ++i) {
-        int idx = id[i];
-        if(idx <= m) getMax(maxf, f[idx]);
-        else {
-            P cur = maxf;
-            ++cur.first;
-            getMax(f[idx], cur);
+int main(){
+    while(scanf("%d", &n) != EOF){
+        for(int i = 0; i < n; i++){
+            scanf("%d", &a[i].x);
+            a[i].pos = i + 1;
         }
+        sort(a, a + n);
+        Node ans;
+        for(int i = 0; i < n; i++){
+            Node temp = sum(a[i].pos);
+            if(++temp.len == 1) temp.cnt = 1;
+            ans = ans + temp;
+            add(a[i].pos, temp);
+        }
+        cout<<ans.cnt<<endl;
+
     }
-    cdq(m + 1, r);
-}
-
-int main() {
-
-
-
-    scanf("%d", &n);
-    for(int i = 1; i <= n; ++i) scanf("%d", a + i);
-
-    for(int i = 1; i <= n; ++i) f[i] = P(1, 1);
-    cdq(1, n);
-
-    P ans(0, 0);
-    for(int i = 1; i <= n; ++i) getMax(ans, f[i]);
-    printf("%d\n", ans.second);
-
-    return 0;
 }
