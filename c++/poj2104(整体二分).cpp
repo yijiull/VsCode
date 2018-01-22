@@ -5,8 +5,8 @@
 
 using namespace std;
 
-const int maxn = 1e5 + 10;
-const int maxq = 5010;
+const int maxn = 5e4 + 10;
+const int maxq = 2e4 + 10;
 const int inf = 0x3f3f3f3f;
 
 struct Qry{
@@ -49,7 +49,7 @@ void solve(int L, int R, int l, int r){
     for(int i = L; i <= R; i++){
         if(q[i].type == 1){
             if(q[i].x <= m) {
-                bit.add(q[i].id, 1);
+                bit.add(q[i].id, q[i].y);
                 q1[f++] = q[i];
             }else q2[g++] = q[i];
         }else{
@@ -62,7 +62,7 @@ void solve(int L, int R, int l, int r){
             }
         }
     }
-    for(int i = 0; i < f; i++) if(q1[i].type == 1) bit.add(q1[i].id, -1);
+    for(int i = 0; i < f; i++) if(q1[i].type == 1) bit.add(q1[i].id, -q1[i].y);
     memcpy(q + L, q1, f * sizeof(Qry));
     memcpy(q + L + f, q2, g * sizeof(Qry));
     solve(L, L + f - 1, l, m);
@@ -70,21 +70,35 @@ void solve(int L, int R, int l, int r){
 }
 int main(){
     ios::sync_with_stdio(0);
-    while(cin>>n>>m){
+    int t;
+    cin>>t;
+    while(t--){
+        cin>>n>>m;
         bit.init(n);
         int idx = 0;
         for(int i = 1; i <= n; i++){
             cin>>a[i];
-            q[++idx] = Qry(a[i], 0, 0, i, 1);
+            q[++idx] = Qry(a[i], 1, 0, i, 1);
         }
-        for(int i = 1; i <= m; i++){
+        int id = 0;
+        for(int i = 1; i <= m; i++) {
+            char op[3];
             int x, y, k;
-            cin>>x>>y>>k;
-            q[++idx] = Qry(x, y, k, i, 2);
+            cin>>op;
+            if(op[0] == 'Q'){
+                cin>>x>>y>>k;
+                q[++idx] = Qry(x, y, k, id++, 2);
+            }else{
+                cin>>x>>y;
+                q[++idx] = Qry(a[x], -1, 0, x, 1);
+                a[x] = y;
+                q[++idx] = Qry(y, 1, 0, x, 1);
+            }
         }
-        solve(1, idx, -inf, inf);
-        for(int i = 1; i <= m; i++){
+        solve(1, idx, 0, inf);
+        for(int i = 0; i < id; i++){
             cout<<ans[i]<<endl;
+            
         }
     }
 }
